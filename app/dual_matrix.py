@@ -53,9 +53,10 @@ class dual_matrix(primal_matrix):
         return
 
     def update_linha_pivot(self) -> list:
+        valor_pivot = self.arr[self.linha_pivot, self.coluna_pivot]
         for coluna in range(len(self.arr[self.linha_pivot])):
             self.arr[self.linha_pivot, coluna] = self.divide_rounded(self.arr[self.linha_pivot, coluna],
-                                                                     self.arr[self.linha_pivot, coluna])
+                                                                     valor_pivot)
         return self.arr[self.linha_pivot]
 
     def executa_dual(self):
