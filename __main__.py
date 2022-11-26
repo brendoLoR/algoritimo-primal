@@ -1,14 +1,15 @@
 from app.primal_matrix import primal_matrix
 from app.dual_matrix import dual_matrix
 
+
 def primal():
     variaveis = int(input("QTD variáveis: "))
     restricoes = int(input("QTD restrições: "))
     array_primal = primal_matrix(variaveis, restricoes)
 
-
     for i in range(restricoes):
-        array = input("entre com valores da primeira restrição, separados por virgula: ")
+        array = input(
+            "entre com valores da primeira restrição, separados por virgula: ")
         sol = input("valor da restrição: ")
         array_primal.set_restricao(i, array.replace(" ", "").split(','), sol)
     funObj = input("entre com valores da F.O, separados por virgula: ")
@@ -21,20 +22,20 @@ def primal():
 
     arraySol = array_primal.get_solucoes()
 
-
     for i in range(len(arraySol[0])):
         print("Valor de x"+str(i+1)+": " + str(arraySol[0][i]))
 
     print("F.O: "+str(arraySol[2][0]))
+
 
 def dual():
     variaveis = int(input("QTD variáveis: "))
     restricoes = int(input("QTD restrições: "))
     array_primal = dual_matrix(variaveis, restricoes)
 
-
     for i in range(restricoes):
-        array = input("entre com valores da primeira restrição, separados por virgula: ")
+        array = input(
+            "entre com valores da primeira restrição, separados por virgula: ")
         sol = input("valor da restrição: ")
         array_primal.set_restricao(i, array.replace(" ", "").split(','), sol)
     funObj = input("entre com valores da F.O, separados por virgula: ")
@@ -47,17 +48,29 @@ def dual():
 
     arraySol = array_primal.get_solucoes()
 
-
+    print('----------------------------------------------------------------')
+    print('Variáveis:')
     for i in range(len(arraySol[0])):
         print("Valor de x"+str(i+1)+": " + str(arraySol[0][i]))
 
+    print('----------------------------------------------------------------')
+    print('Restrições (se houver):')
+
+    for i in range(len(arraySol[1])):
+        print("Valor da folga f"+str(i+1)+": " + str(arraySol[1][i]))
+
+    print('----------------------------------------------------------------')
+    print('Solução de F.O:')
+
     print("F.O: "+str(arraySol[2][0]))
+
 
 print("Método simplex")
 print("0 - Primal")
 print("1 - Dual")
 opc = input()
 
+print("ATENÇÃO - MANIPULE OS VALORES ANTES DE INSERIR NO PROGRAMA")
 match opc:
     case '0':
         primal()
