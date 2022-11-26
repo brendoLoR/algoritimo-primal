@@ -62,11 +62,11 @@ class TestExecutadual:
 
         self.assert_matrix(self.arr.arr, array_esperado)
 
-    # def test_get_solucoes(self):
-    #     solucoes = self.arr.get_solucoes()
-    #     array_esperado = [
-    #         [0, 1/2, 0],
-    #         [1, 0],
-    #         [-3],
-    #     ]
-    #     self.assert_matrix(solucoes, array_esperado)
+    def test_get_solucoes(self):
+        solucoes = self.arr.get_solucoes()
+        array_esperado = [
+            [0, 1/2, 0],
+            [1, 0],
+            [-3],
+        ]
+        self.assert_matrix(solucoes, array_esperado)
