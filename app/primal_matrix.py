@@ -1,10 +1,9 @@
 import numpy as np
-import pandas as pd
 import math
 
 
 class primal_matrix:
-    array_primal = []
+    arr = []
     linha_pivot = None
     coluna_pivot = None
 
@@ -16,66 +15,115 @@ class primal_matrix:
     def __init__(self, variaveis, restricoes) -> None:
         self.variaveis = variaveis
         self.restricoes = restricoes
-        self.monut_array_primal()
-        self.linha_objetivo = len(self.array_primal) - 1
-        self.coluna_resultado = len(self.array_primal[self.linha_objetivo]) - 1
-        print(self.array_primal)
+        self.monut_arr()
+        self.linha_objetivo = len(self.arr) - 1
+        self.coluna_resultado = len(self.arr[self.linha_objetivo]) - 1
         pass
 
-    def monut_array_primal(self) -> list:
-        self.array_primal = np.zeros(
+    def divide_rounded(self, a, b):
+        if (a != 0):
+            return round(a / b, 3)
+        return 0
+
+    def monut_arr(self) -> list:
+        self.arr = np.zeros(
             shape=(self.restricoes+1, self.variaveis + self.restricoes + 1), dtype=float)
-        return self.array_primal
+        return self.arr
 
     def set_restricao(self, restricao, valores, resultado):
-        self.array_primal[restricao, self.coluna_resultado] = resultado
-        self.array_primal[restricao, self.variaveis + restricao] = 1
+        self.arr[restricao, self.coluna_resultado] = resultado
+        self.arr[restricao, self.variaveis + restricao] = 1
         for coluna in range(self.variaveis):
-            self.array_primal[restricao, coluna] = valores[coluna]
+            self.arr[restricao, coluna] = valores[coluna]
         return
 
     def set_fun_objetivo(self, valores):
         for coluna in range(self.variaveis):
-            self.array_primal[self.linha_objetivo, coluna] = valores[coluna]
+            self.arr[self.linha_objetivo, coluna] = valores[coluna]
         return
 
-    def get_coluna_pivot(self) -> int:
+    def get_coluna_pivot(self) -> int | None:
         menor_valor = math.inf
         self.coluna_pivot = None
         for coluna in range(self.variaveis):
-            elemento = self.array_primal[self.linha_objetivo, coluna]
+            elemento = self.arr[self.linha_objetivo, coluna]
             if (elemento < menor_valor and elemento < 0):
                 self.coluna_pivot = coluna
                 menor_valor = elemento
         return self.coluna_pivot
 
-    def get_elemento_pivot(self):
+    def get_elemento_pivot(self) -> tuple[bool, int, int, int]:
         linha_pivot_id = None
-        coluna_pivot = self.get_coluna_pivot()
-        if(coluna_pivot != None):
+        coluna_pivot_id = self.get_coluna_pivot()
+
+        if (coluna_pivot_id != None):
             menor_valor = math.inf
+
             for linha in range(self.restricoes):
-                menor_tmp = self.array_primal[linha, self.coluna_resultado] / \
-                    self.array_primal[linha, coluna_pivot]
-                if (menor_tmp < menor_valor and menor_valor > 0):
+                menor_tmp = self.divide_rounded(self.arr[linha, self.coluna_resultado],
+                                                self.arr[linha, coluna_pivot_id])
+
+                if (menor_tmp < menor_valor and menor_valor >= 0):
                     menor_valor = menor_tmp
                     linha_pivot_id = linha
-            return linha_pivot_id,  coluna_pivot,  menor_valor
-        return False
+
+            return True, linha_pivot_id,  coluna_pivot_id,  self.arr[linha_pivot_id, coluna_pivot_id]
+        return False, 0,  0,  0
 
     def update_linha_pivot(self) -> list:
-        linha_pivot, coluna_pivot, valor_pivot = self.get_elemento_pivot()
-        self.linha_pivot = linha_pivot
-        self.array_primal[linha_pivot,
-                          coluna_pivot] = valor_pivot
-        for coluna in range(len(self.array_primal[linha_pivot])):
-            self.array_primal[linha_pivot,
-                              coluna] = self.array_primal[linha_pivot, coluna] / valor_pivot
-        return self.array_primal[linha_pivot]
+        status, linha_pivot, coluna_pivot, valor_pivot = self.get_elemento_pivot()
+        if (status):
+            self.linha_pivot = linha_pivot
+
+            for coluna in range(len(self.arr[linha_pivot])):
+                self.arr[linha_pivot, coluna] = self.divide_rounded(self.arr[linha_pivot, coluna],
+                                                                             valor_pivot)
+            return self.arr[linha_pivot]
+        return False
 
     def update_linha(self, linha):
-        coeficiente = self.array_primal[linha, self.coluna_pivot] * -1
-        for coluna in range(len(self.array_primal[linha])):
-            self.array_primal[linha, coluna] += (
-                self.array_primal[self.linha_pivot, coluna] * coeficiente)
+        coeficiente = self.arr[linha, self.coluna_pivot] * -1
+        for coluna in range(len(self.arr[linha])):
+            self.arr[linha, coluna] += (
+                self.arr[self.linha_pivot, coluna] * coeficiente)
         return
+
+    def executa_primal(self):
+        self.update_linha_pivot()
+        while (self.get_coluna_pivot() != None):
+            for linha in range(self.restricoes+1):
+                if (linha != self.linha_pivot):
+                    self.update_linha(linha)
+            self.update_linha_pivot()
+        return
+
+    def get_solucoes(self):
+        solucao = []
+        variaveis = np.zeros(shape=(self.variaveis), dtype=float)
+        for coluna_variavel in range(self.variaveis):
+            resultado = 0
+            for linha in range(self.restricoes):
+                if (self.arr[linha, coluna_variavel] == 1):
+                    resultado = self.arr[linha,
+                                                  self.coluna_resultado]
+                if (self.arr[linha, coluna_variavel] != 1 and self.arr[linha, coluna_variavel] != 0):
+                    resultado = 0
+            variaveis[coluna_variavel] = resultado
+
+        restricoes = np.zeros(shape=(self.restricoes), dtype=float)
+        for coluna_restricao in range(self.restricoes):
+            coluna = coluna_restricao + self.variaveis
+            resultado = 0
+            for linha in range(self.restricoes):
+                if (self.arr[linha, coluna] == 1):
+                    resultado = 1
+                if (self.arr[linha, coluna] != 1 and self.arr[linha, coluna] != 0):
+                    resultado = 0
+            restricoes[coluna_restricao] = resultado
+
+        solucao.append(variaveis)
+        solucao.append(restricoes)
+        solucao.append(
+            [self.arr[self.linha_objetivo, self.coluna_resultado]])
+
+        return solucao
