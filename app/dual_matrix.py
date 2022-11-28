@@ -60,9 +60,20 @@ class dual_matrix(primal_matrix):
         return self.arr[self.linha_pivot]
 
     def executa_dual(self):
+        self.print()
+        iteracoes = 0
         while (self.get_coluna_pivot() != None):
+            self.print()
+            iteracoes += 1
+            print('--------------------------------------------------')
+            print('Iteração Atual: ')
+            print(iteracoes)
             for linha in range(self.restricoes+1):
                 if (linha != self.linha_pivot):
+                    print('--------------------------------------------------')
+                    print('Linha Atual: ')
+                    print(linha)
+                    self.print()
                     self.update_linha(linha)
             self.update_linha_pivot()
         return

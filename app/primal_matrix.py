@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from tabulate import tabulate
 
 
 class primal_matrix:
@@ -18,14 +19,31 @@ class primal_matrix:
         self.monut_arr()
         self.linha_objetivo = len(self.arr) - 1
         self.coluna_resultado = len(self.arr[self.linha_objetivo]) - 1
+        self.headers=[]
+        for i in range(variaveis) :
+            self.headers.append('x%d' % i)
+        for i in range(restricoes) :
+            self.headers.append('f%d' % i)
+        self.headers.append('s')
         pass
 
     def divide_rounded(self, a, b):
-        if(b == 0):
-            return math.inf
+        if (b == 0):
+            return 0
         if (a != 0):
             return round(a / b, 3)
         return 0
+
+    def print(self):
+        print('--------------------------------------------------')
+        print('Matrix')
+        print(tabulate(self.arr, self.headers))
+        print('--------------------------------------------------')
+        print('Coluna Pivot_id')
+        print(self.coluna_pivot)
+        print('--------------------------------------------------')
+        print('Linha Pivot_id')
+        print(self.linha_pivot)
 
     def monut_arr(self) -> list:
         self.arr = np.zeros(
@@ -65,7 +83,7 @@ class primal_matrix:
                 menor_tmp = self.divide_rounded(self.arr[linha, self.coluna_resultado],
                                                 self.arr[linha, coluna_pivot_id])
 
-                if (menor_tmp < menor_valor and menor_valor >= 0):
+                if (menor_tmp < menor_valor and menor_tmp > 0):
                     menor_valor = menor_tmp
                     linha_pivot_id = linha
 
@@ -79,7 +97,7 @@ class primal_matrix:
 
             for coluna in range(len(self.arr[linha_pivot])):
                 self.arr[linha_pivot, coluna] = self.divide_rounded(self.arr[linha_pivot, coluna],
-                                                                             valor_pivot)
+                                                                    valor_pivot)
             return self.arr[linha_pivot]
         return False
 
@@ -91,12 +109,23 @@ class primal_matrix:
         return
 
     def executa_primal(self):
+        self.print()
         self.update_linha_pivot()
+        iteracoes = 0
         while (self.get_coluna_pivot() != None):
+            iteracoes += 1
+            print('--------------------------------------------------')
+            print('Iteração Atual: ')
+            print(iteracoes)
             for linha in range(self.restricoes+1):
+                print('--------------------------------------------------')
+                print('Linha Atual: ')
+                print(linha)
                 if (linha != self.linha_pivot):
+                    self.print()
                     self.update_linha(linha)
             self.update_linha_pivot()
+            self.print()
         return
 
     def get_solucoes(self):
@@ -107,7 +136,7 @@ class primal_matrix:
             for linha in range(self.restricoes):
                 if (self.arr[linha, coluna_variavel] == 1):
                     resultado = self.arr[linha,
-                                                  self.coluna_resultado]
+                                         self.coluna_resultado]
                 if (self.arr[linha, coluna_variavel] != 1 and self.arr[linha, coluna_variavel] != 0):
                     resultado = 0
             variaveis[coluna_variavel] = resultado

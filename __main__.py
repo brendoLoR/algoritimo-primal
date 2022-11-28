@@ -76,3 +76,57 @@ match opc:
         primal()
     case '1':
         dual()
+    case '3':
+
+        # QUESTÃO 6
+        # arr = dual_matrix(3, 3)
+        # arr.set_restricao(0, [-9, -8, -10], -5)
+        # arr.set_restricao(1, [-4, -2, -3], -6)
+        # arr.set_restricao(2, [-5, -6, -4], -7.6)
+        # arr.set_fun_objetivo([8, 9, 7])
+
+        # QUESTÃO 5
+        # arr = dual_matrix(16, 8)
+        # arr.set_restricao(0, [-1, -2.10, -1.10, 0, 0, 0,
+        #                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0], -20500)
+        # arr.set_restricao(1, [0, 0, 0, 0, -0.90, -0.80, -1,
+        #                   0, 0, 0, 0, 0, 0, 0, 0, 0], -25300)
+        # arr.set_restricao(2, [0, 0, 0, 0, 0, 0, 0, 0, -
+        #                   1.80, -0.70, -1.20, 0, 0, 0, 0, 0], -21000)
+        # arr.set_restricao(3, [0, 0, 0, 0, 0, 0, 0, 0, 0,
+        #                   0, 0, 0, -1.05, -1.15, -1.50, 0], -20000)
+        # arr.set_restricao(4, [-1.00, 0, 0, 0, -0.90, 0, 0,
+        #                   0, -1.80, 0, 0, 0, -1.05, 0, 0, 0], -30000)
+        # arr.set_restricao(5, [0, -2.10, 0, 0, 0, -0.80,
+        #                   0, 0, 0, -0.70, 0, 0, 0, -1.50, 0, 0], -25700.00)
+        # arr.set_restricao(6, [0, 0, -1.10, 0, 0, 0, -1, 0,
+        #                   0, 0, -1.20, 0, 0, 0, -1.50, 0], -23500)
+        # arr.set_restricao(7, [0, 0, 0, 0, 0, 0, 0, 0, 0,
+        #                   0, 0, 0, 0, 0, 0, 0], -7850)
+
+        # arr.set_fun_objetivo([1.00, 0.90, 1.80, 1.05, 2.10,	0.80,	0.70,	1.15,
+        #                       1.10,	1.00, 1.20, 1.50, 0, 0, 0, 0])
+
+        # QUESTÃO 4
+        # arr = primal_matrix(3, 2)
+        # arr.set_restricao(0, [10, 5, 15], 450)
+        # arr.set_restricao(1, [8, 4, 7], 300)
+        # arr.set_fun_objetivo([-100, -50, -90])
+
+        # QUESTÃO 3
+        # arr = primal_matrix(2,3)
+        # arr.set_restricao(0, [6, 4], 30)
+        # arr.set_restricao(1, [1, 0], 1)
+        # arr.set_restricao(2, [0, 1], 2)
+        # arr.set_fun_objetivo([-150, -104])
+
+        # QUESTÃO 7
+        arr = primal_matrix(2, 3)
+        arr.set_restricao(0, [1, 1], 8)
+        arr.set_restricao(1, [1, 2], 12)
+        arr.set_restricao(2, [1, 0], 6)
+        arr.set_fun_objetivo([-7, -12])
+
+        # arr.executa_dual()
+        arr.executa_primal()
+        print(arr.get_solucoes())
