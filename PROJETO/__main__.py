@@ -85,7 +85,7 @@ match opc:
         # arr.set_restricao(2, [-5, -6, -4], -7.6)
         # arr.set_fun_objetivo([8, 9, 7])
 
-        # QUESTÃO 5
+        # # QUESTÃO 5
         # arr = dual_matrix(16, 8)
         # arr.set_restricao(0, [-1, -2.10, -1.10, 0, 0, 0,
         #                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0], -20500)
@@ -120,7 +120,7 @@ match opc:
         # arr.set_restricao(2, [0, 1], 2)
         # arr.set_fun_objetivo([-150, -104])
 
-        # QUESTÃO 7
+        # QUESTÃO 8
         arr = primal_matrix(2, 3)
         arr.set_restricao(0, [1, 1], 8)
         arr.set_restricao(1, [1, 2], 12)

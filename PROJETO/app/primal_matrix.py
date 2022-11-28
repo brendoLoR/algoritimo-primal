@@ -29,7 +29,7 @@ class primal_matrix:
 
     def divide_rounded(self, a, b):
         if (b == 0):
-            return 0
+            return 9999999
         if (a != 0):
             return round(a / b, 3)
         return 0
